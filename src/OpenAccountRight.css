@@ -11,7 +11,7 @@
     border-style: solid;
 }
 .line11{
-    margin-top: 100px;
+    margin-top: 120px;
 }
 .OpenAccount__submit__button{
     margin-top: 15px;
@@ -33,7 +33,13 @@
 .OpenAccount__submit__button:hover{
 background-color: #92BA92 ;
 color:white;
-
 font-weight: bold;
 border-radius: 5px;
 } 
+.uinput{
+    border-color: #92BA92 ;
+}
+.number_input{
+    width:165px;
+    
+}

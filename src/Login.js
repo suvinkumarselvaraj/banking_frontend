@@ -1,19 +1,75 @@
 import React from 'react'
 import { act } from 'react-dom/test-utils';
-import { Link } from 'react-router-dom';
+
 import './Login.css';
 import LoginButton from './LoginButton';
 import OpenAccount from './OpenAccount';
-function Login() {
+import { useStateValue } from './StateProvider';
+import { Link, useNavigate } from 'react-router-dom';
 
+function Login() {
+    const navigate = useNavigate();
+    const [active_user,dispatch] = useStateValue();
     function handleLogin(event){
         // event.preventDefault();
         console.log(event.target);
+        
     }
     function handleLoginSubmit(event){
         event.preventDefault();
         var data = new FormData(event.target);
         console.log(data.get("account_no"));
+        console.log(data.get("account_password"));
+        //backend call
+        var accountNumber = data.get("account_no");
+        var password = data.get("account_password");
+
+        if(accountNumber === ''||password === ''){
+            alert("Empty field values not allowed");
+            return;
+        }
+        
+        var userData = {'accountNumber':accountNumber,'password':password};
+        if(accountNumber >= 11011 && password.length >=6)
+        {
+            fetch('http://localhost:8080/banking_app/login', {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },    
+            body: JSON.stringify(userData),
+            })
+            .then(res => res.json())
+            .then(data => {  
+              console.log(data);
+              if(data.status === "failure")
+              {
+                  alert("wrong username or password, check your credentials again");
+                  return;
+              }
+              else{
+                  sessionStorage.setItem("username",data.username);
+                  sessionStorage.setItem("accountNo",accountNumber);
+                  sessionStorage.setItem("phoneNo",data.phoneNo);
+                  sessionStorage.setItem("balance",data.balance);
+                  sessionStorage.setItem("customerId",data.customerId);
+                  //sessionStorage.setItem("accountBalance",);
+                  dispatch({
+                      type: 'Add_logged_user',
+                      logged_user: sessionStorage.getItem("username")
+                  });
+                //   alert("success");
+                navigate("/home");
+              }
+          })
+          .catch((error)=>{
+              console.log(error);
+          })
+        }
+        else{
+            alert("check your credentials and try again");
+            return;
+        }
     }
     function handleOpenAccount(event){
 

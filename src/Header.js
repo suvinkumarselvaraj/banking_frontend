@@ -1,6 +1,9 @@
 import React from 'react'
 import './Header.css'
+import useStateValue from './StateProvider';
 function Header() {
+  
+  
   return (
     <div className='Header__container'>
         <div className='Header__bankLogo__div'>
@@ -11,7 +14,7 @@ function Header() {
         <strong>YOUR ONE-STOP ONLINE BANKING APPLICATION</strong>
         </div>
         <div className='Header__login'>
-            <a className = "Header__login__link" href='/login'>login</a>
+            <a className = "Header__login__link" href='/login'>{sessionStorage.getItem("username") ? 'Sign out' : 'Sign in'}</a>
         </div>
         </div>
   )
